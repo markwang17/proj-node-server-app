@@ -6,13 +6,18 @@ import session from "express-session";
 import ReviewsController from "./controllers/reviews/reviews-controller.js";
 
 const app = express();
-app.use(
-    session({
-        secret: "somesecret",
-        resave: false,
-        saveUninitialized: true,
-    })
-);
+const sess = {
+    secret: "dummysecret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+};
+if (process.env.ENV === 'PROD') {
+    app.set('trust proxy', 1);
+    sess.cookie.secure = true;
+    sess.cookie.sameSite = 'none';
+}
+app.use(session(sess));
 
 app.use(
     cors({
