@@ -53,7 +53,11 @@ const login = async (req, res) => {
         req.session["currentUser"] = user;
         res.json(user);
     } else {
-        res.sendStatus(404);
+        if (user && user.blocked) {
+            res.sendStatus(403)
+        } else {
+            res.sendStatus(404);
+        }
     }
 }
 
